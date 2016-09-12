@@ -1,0 +1,13 @@
+---
+
+- name: Lufi | Copy upstart service config
+  template:
+    src: etc/default/lufi.j2
+    dest: "/etc/default/lufi"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart lufi
+
+- name: Lufi | Copy upstart config
+  command: creates=/etc/init/lufi.conf cp {{ lufi_site.working_dir }}/utilities/lufi_upstart.conf /etc/init/lufi.conf

@@ -1,0 +1,8 @@
+---
+
+- name: reload systemd daemons
+  command: systemctl daemon-reload
+  notify: restart lufi
+
+- name: restart lufi
+  service: name=lufi state=restarted enabled=yes

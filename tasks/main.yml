@@ -1,0 +1,8 @@
+---
+
+- include: install.yml
+  tags: lufi.install
+- include: site.yml
+  tags: lufi.site
+- include: service-{{ ansible_service_mgr }}.yml
+  tags: lufi.service
