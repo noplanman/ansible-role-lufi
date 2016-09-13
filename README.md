@@ -22,19 +22,18 @@ lufi_user: www-data
 lufi_group: www-data
 ```
 
-The site itself has a few mandatory and a few optional values.
+There are a few mandatory and many optional values. Check all possible variables in `defaults/main.yml`.
 
 ```
-lufi_site:
-  # Required!
-  working_dir: "/var/www/example.com"
-  listen: "http://127.0.0.1:8080"
-  contact: "admin@example.com"
-  secrets: ["array", "of", "random", "secrets"]
-  # Optional
-  theme: "default"
-  broadcast_message: "Maintenance"
-  allowed_domains: []
+# Required!
+lufi_working_dir: "/var/www/example.com"
+lufi_listen: "http://127.0.0.1:8080"
+lufi_contact: "admin@example.com"
+lufi_secrets: ["array", "of", "random", "secrets"]
+# Optional
+lufi_theme: "default"
+lufi_broadcast_message: "Maintenance"
+lufi_allowed_domains: []
 ```
 
 ## Role Tags
@@ -66,12 +65,11 @@ None.
 ```
 # vars/main.yml
 ---
-lufi_site:
-  working_dir: "/var/www/lufi.example.com"
-  listen: "http://127.0.0.1:8080"
-  contact: "admin@lufi.example.com"
-  secrets: ["xud7ooJu","aiNg7duG","ih7kom8Z","Ocaish3I","Ooja7chi","Eet4weil","Ethee4Go","xahJ0ohy"]
-  broadcast_message: "Welcome to Lufi. Upload those files!"
+lufi_working_dir: "/var/www/lufi.example.com"
+lufi_listen: "http://127.0.0.1:8080"
+lufi_contact: "admin@lufi.example.com"
+lufi_secrets: ["xud7ooJu","aiNg7duG","ih7kom8Z","Ocaish3I","Ooja7chi","Eet4weil","Ethee4Go","xahJ0ohy"]
+lufi_broadcast_message: "Welcome to Lufi. Upload those files!"
 ```
 
 ## License

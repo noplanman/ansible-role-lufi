@@ -10,4 +10,4 @@
   notify: restart lufi
 
 - name: Lufi | Copy sysvinit config
-  command: creates=/etc/init.d/lufi cp {{ lufi_site.working_dir }}/utilities/lufi.init /etc/init.d/lufi
+  command: creates=/etc/init.d/lufi cp {{ lufi_working_dir }}/utilities/lufi.init /etc/init.d/lufi

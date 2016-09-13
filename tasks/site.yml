@@ -2,33 +2,33 @@
 
 - name: Lufi | Create working directory
   file:
-    dest: "{{ lufi_site.working_dir }}"
+    dest: "{{ lufi_working_dir }}"
     state: directory
 
 - name: Lufi | Checkout git repository
   git:
     repo: https://framagit.org/noplanman/lufi.git
-    dest: "{{ lufi_site.working_dir }}"
+    dest: "{{ lufi_working_dir }}"
     update: no
   notify: restart lufi
 
 - name: Lufi | Copy config
   template:
     src: lufi.conf.j2
-    dest: "{{ lufi_site.working_dir }}/lufi.conf"
+    dest: "{{ lufi_working_dir }}/lufi.conf"
     mode: 0644
   notify: restart lufi
 
 - name: Lufi | Install lufi
   command: carton install
   args:
-    chdir: "{{ lufi_site.working_dir }}"
-    creates: "{{ lufi_site.working_dir }}/lufi.db"
+    chdir: "{{ lufi_working_dir }}"
+    creates: "{{ lufi_db_path }}"
   notify: restart lufi
 
 - name: Lufi | Set permissions on working directory
   file:
-    path: "{{ lufi_site.working_dir }}"
+    path: "{{ lufi_working_dir }}"
     state: directory
     owner: "{{ lufi_user }}"
     group: "{{ lufi_group }}"

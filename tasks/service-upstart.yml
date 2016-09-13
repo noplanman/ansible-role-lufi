@@ -10,4 +10,4 @@
   notify: restart lufi
 
 - name: Lufi | Copy upstart config
-  command: creates=/etc/init/lufi.conf cp {{ lufi_site.working_dir }}/utilities/lufi_upstart.conf /etc/init/lufi.conf
+  command: creates=/etc/init/lufi.conf cp {{ lufi_working_dir }}/utilities/lufi_upstart.conf /etc/init/lufi.conf

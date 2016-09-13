@@ -1,5 +1,7 @@
+# {{ ansible_managed }}
+
 [Unit]
-Description=Image hosting and sharing service
+Description=File hosting service with encryption
 Documentation=https://framagit.org/luc/lufi
 Requires=network.target
 After=network.target
@@ -8,8 +10,8 @@ After=network.target
 Type=forking
 User={{ lufi_user }}
 RemainAfterExit=yes
-WorkingDirectory={{ lufi_site.working_dir }}/
-PIDFile={{ lufi_site.working_dir }}/script/hypnotoad.pid
+WorkingDirectory={{ lufi_working_dir }}/
+PIDFile={{ lufi_working_dir }}/script/hypnotoad.pid
 ExecStart=/usr/local/bin/carton exec hypnotoad script/lufi
 ExecStop=/usr/local/bin/carton exec hypnotoad -s script/lufi
 ExecReload=/usr/local/bin/carton exec hypnotoad script/lufi
