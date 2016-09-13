@@ -7,7 +7,6 @@
     lufi_user: root
     lufi_group: root
     lufi_site:
-      host: "lufi.example.com"
       working_dir: "/var/www/lufi.example.com"
       listen: "http://127.0.0.1:8080"
       contact: "admin@lufi.example.com"
