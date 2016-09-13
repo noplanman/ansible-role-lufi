@@ -1,6 +1,6 @@
 ---
 
-- name: reload systemd daemons
+- name: reload lufi systemd daemons
   command: systemctl daemon-reload
   notify: restart lufi
 
