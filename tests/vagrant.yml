@@ -12,6 +12,6 @@
     lufi_secrets: ["array", "of", "random", "secrets"]
   post_tasks:
     - name: Lufi | Wait for the service to start up
-      pause: seconds=5
+      pause: seconds=11
     - name: Lufi | Check if lufi is running properly
       uri: url={{ lufi_listen }}
