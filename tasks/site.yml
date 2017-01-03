@@ -9,7 +9,8 @@
   git:
     repo: https://framagit.org/noplanman/lufi.git
     dest: "{{ lufi_working_dir }}"
-    update: no
+    update: "{{ lufi_keep_updated }}"
+  register: lufi_git_updated
   notify: restart lufi
 
 - name: Lufi | Copy config
@@ -23,7 +24,7 @@
   command: carton install
   args:
     chdir: "{{ lufi_working_dir }}"
-    creates: "{{ lufi_db_path }}"
+  when: lufi_git_updated.changed
   notify: restart lufi
 
 - name: Lufi | Set permissions on working directory
