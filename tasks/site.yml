@@ -24,7 +24,18 @@
   command: carton install
   args:
     chdir: "{{ lufi_working_dir }}"
+    creates: "{{ lufi_db_path }}"
   when: lufi_git_updated.changed
+  register: lufi_app_installed
+  notify: restart lufi
+
+- name: Lufi | Update lufi
+  command: carton update
+  args:
+    chdir: "{{ lufi_working_dir }}"
+  when: not lufi_app_installed.changed and lufi_keep_updated
+  register: lufi_app_updated
+  changed_when: "'Successfully installed' in lufi_app_updated.stdout"
   notify: restart lufi
 
 - name: Lufi | Set permissions on working directory
