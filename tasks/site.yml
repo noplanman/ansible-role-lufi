@@ -10,6 +10,7 @@
     repo: https://framagit.org/noplanman/lufi.git
     dest: "{{ lufi_working_dir }}"
     update: "{{ lufi_keep_updated }}"
+    force: yes
   register: lufi_git_updated
   notify: restart lufi
 
