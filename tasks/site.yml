@@ -1,10 +1,5 @@
 ---
 
-- name: Lufi | Create working directory
-  file:
-    dest: "{{ lufi_working_dir }}"
-    state: directory
-
 - name: Lufi | Checkout git repository
   git:
     repo: https://framagit.org/noplanman/lufi.git
@@ -12,6 +7,7 @@
     update: "{{ lufi_keep_updated }}"
     force: yes
   register: lufi_git_updated
+  changed_when: lufi_git_updated.after != lufi_git_updated.before
   notify: restart lufi
 
 - name: Lufi | Copy config
@@ -26,7 +22,6 @@
   args:
     chdir: "{{ lufi_working_dir }}"
     creates: "{{ lufi_db_path }}"
-  when: lufi_git_updated.changed
   register: lufi_app_installed
   notify: restart lufi
 
@@ -34,15 +29,17 @@
   command: carton update
   args:
     chdir: "{{ lufi_working_dir }}"
-  when: not lufi_app_installed.changed and lufi_keep_updated
+  when: lufi_app_installed.changed or lufi_keep_updated
   register: lufi_app_updated
   changed_when: "'Successfully installed' in lufi_app_updated.stdout"
   notify: restart lufi
 
-- name: Lufi | Set permissions on working directory
+- name: Lufi | Set ownership on working directory
   file:
     path: "{{ lufi_working_dir }}"
     state: directory
     owner: "{{ lufi_user }}"
     group: "{{ lufi_group }}"
     recurse: yes
+  register: lufi_ownership_set
+  changed_when: lufi_ownership_set.diff.after|to_json != lufi_ownership_set.diff.before|to_json
