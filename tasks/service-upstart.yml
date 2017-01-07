@@ -3,7 +3,7 @@
 - name: Lufi | Copy upstart service config
   template:
     src: etc/default/lufi.j2
-    dest: "/etc/default/lufi"
+    dest: /etc/default/lufi
     owner: root
     group: root
     mode: 0644

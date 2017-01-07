@@ -22,6 +22,12 @@ lufi_user: www-data
 lufi_group: www-data
 ```
 
+Set if Lufi should be kept up to date. (default: no)
+
+```
+lufi_keep_updated: no
+```
+
 There are a few mandatory and many optional values. Check all possible variables in `defaults/main.yml`.
 
 ```
@@ -30,10 +36,32 @@ lufi_working_dir: "/var/www/example.com"
 lufi_listen: "http://127.0.0.1:8080"
 lufi_contact: "admin@example.com"
 lufi_secrets: ["array", "of", "random", "secrets"]
+
 # Optional
 lufi_theme: "default"
-lufi_broadcast_message: "Maintenance"
+lufi_proxy: no
+lufi_workers: 30
+lufi_clients: 1
+lufi_url_length: 8
+lufi_provis_step: 5
+lufi_provisioning: 100
+lufi_token_length: 32
+lufi_max_file_size: 104857600
+lufi_piwik_img: ""
+lufi_broadcast_message: ""
+lufi_default_delay: 0
+lufi_max_delay: 0
+lufi_prefix: "/"
 lufi_allowed_domains: []
+lufi_fixed_domain: ""
+lufi_mail_sender: "no-reply@lufi.io"
+lufi_db_path: "lufi.db"
+lufi_upload_dir: "files"
+lufi_session_duration: 3600
+lufi_keep_ip_during: 365
+lufi_max_total_size: 10*1024*1024*1024
+lufi_policy_when_full: "warn"
+lufi_delete_no_longer_viewed_files: 90
 ```
 
 ## Role Tags
@@ -41,9 +69,9 @@ lufi_allowed_domains: []
 Each part of the setup has a tag.
 
 ```
-lufi.install
-lufi.site
-lufi.service
+lufi:install
+lufi:site
+lufi:service
 ```
 
 ## Dependencies

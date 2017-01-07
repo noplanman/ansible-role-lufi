@@ -3,7 +3,7 @@
 - name: Lufi | Copy systemd service config
   template:
     src: lib/systemd/system/lufi.service.j2
-    dest: "/lib/systemd/system/lufi.service"
+    dest: /lib/systemd/system/lufi.service
     owner: root
     group: root
     mode: 0644
