@@ -8,7 +8,7 @@ lufi_keep_updated: no
 
 #  Required, check the config file itself for more documentation.
 #  lufi_working_dir: "/var/www/lufi.example.com"
-#  lufi_listen: "http://127.0.0.1:8080"
+#  lufi_listen: "http://127.0.0.1:8080"    # Or an array, if multiple addresses.
 #  lufi_contact: "admin@lufi.example.com"
 #  lufi_secrets: ["array", "of", "random", "secrets"]
 

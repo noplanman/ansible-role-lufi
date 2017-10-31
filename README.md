@@ -33,7 +33,7 @@ There are a few mandatory and many optional values. Check all possible variables
 ```
 # Required!
 lufi_working_dir: "/var/www/example.com"
-lufi_listen: "http://127.0.0.1:8080"
+lufi_listen: "http://127.0.0.1:8080"    # Or an array, if multiple addresses.
 lufi_contact: "admin@example.com"
 lufi_secrets: ["array", "of", "random", "secrets"]
 

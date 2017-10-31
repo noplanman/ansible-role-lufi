@@ -8,7 +8,11 @@
     # see http://mojolicio.us/perldoc/Mojo/Server/Hypnotoad for a full list of settings
     hypnotoad => {
         # array of IP addresses and ports you want to listen to
+{% if lufi_listen is string %}
         listen => ['{{ lufi_listen }}'],
+{% else %}
+        listen => {{ lufi_listen | to_json }},
+{% endif %}
         # if you use Lufi behind a reverse proxy like Nginx, you want ro set proxy to 1
         # if you use Lufi directly, let it commented
         #proxy  => 1,
