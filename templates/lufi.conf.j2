@@ -119,6 +119,13 @@
     #    50000000   => 60, # between 50MB ans 1GB  => max is 60 days
     #    1000000000 => 2,  # more than 1GB         => max is 2 days
     #},
+{% if lufi_delay_for_size is mapping %}
+    delay_for_size  => {
+{% for key in lufi_delay_for_size %}
+        {{ "%s => %s," | format(key, lufi_delay_for_size[key]) }}
+{% endfor %}
+    },
+{% endif %}
 
     # URL sub-directory in which you want Lufi to be accessible
     # example: you want to have Lufi under https://example.org/lufi/
@@ -152,6 +159,12 @@
     #    how => 'smtp',
     #    howargs => ['smtp.example.org']
     #},
+{% if lufi_mail is mapping %}
+    mail => {
+        {{ "how     => '%s'," % lufi_mail.how               if lufi_mail.how }}
+        {{ "howargs => %s,"   % lufi_mail.howargs | to_json if lufi_mail.howargs }}
+    },
+{% endif %}
 
     # Email sender address
     # Optional, default to no-reply@lufi.io
@@ -188,8 +201,18 @@
     #    bind_pwd    => 'secr3t',
     #    user_filter => '!(uid=ldap_user)'
     #},
+{% if lufi_ldap is mapping %}
+    ldap => {
+        {{ "uri         => '%s'," % lufi_ldap.uri         if lufi_ldap.uri         }}
+        {{ "user_tree   => '%s'," % lufi_ldap.user_tree   if lufi_ldap.user_tree   }}
+        {{ "bind_dn     => '%s'," % lufi_ldap.bind_dn     if lufi_ldap.bind_dn     }}
+        {{ "bind_user   => '%s'," % lufi_ldap.bind_user   if lufi_ldap.bind_user   }}
+        {{ "bind_pwd    => '%s'," % lufi_ldap.bind_pwd    if lufi_ldap.bind_pwd    }}
+        {{ "user_filter => '%s'," % lufi_ldap.user_filter if lufi_ldap.user_filter }}
+    }
+{% endif %}
 
-    # if you setted ldap above, the session will last `session_duration` seconds before
+    # if you've set ldap above, the session will last `session_duration` seconds before
     # the user needs to reauthenticate
     # optional, default is 3600
     #session_duration => 3600,

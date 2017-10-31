@@ -27,11 +27,25 @@ lufi_clients: 1
 #lufi_broadcast_message: ""
 #lufi_default_delay: 0
 #lufi_max_delay: 0
+#lufi_delay_for_size:
+#    10000000: 90   # between 10MB and 50MB => max is 90 days, less than 10MB => max is max_delay (see above)
+#    50000000: 60   # between 50MB ans 1GB  => max is 60 days
+#    1000000000: 2  # more than 1GB         => max is 2 days
 #lufi_prefix: "/"
 #lufi_allowed_domains: []
 #lufi_fixed_domain: ""
+#lufi_mail:
+#    how: "smtp"
+#    howargs: ["smtp.example.org"]
 #lufi_mail_sender: "no-reply@lufi.io"
 #lufi_upload_dir: "files"
+#lufi_ldap:
+#    uri: "ldaps://ldap.example.org"
+#    user_tree: "ou=users,dc=example,dc=org"
+#    bind_dn: ",ou=users,dc=example,dc=org"
+#    bind_user: "uid=ldap_user"
+#    bind_pwd: "secr3t"
+#    user_filter: "!(uid=ldap_user)"
 #lufi_session_duration: 3600
 #lufi_keep_ip_during: 365
 #lufi_max_total_size: 10*1024*1024*1024
