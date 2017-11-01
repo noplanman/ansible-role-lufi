@@ -62,7 +62,13 @@ lufi_mail:
     how: "smtp"
     howargs: ["smtp.example.org"]
 lufi_mail_sender: "no-reply@lufi.io"
+lufi_db_type: "sqlite"
 lufi_db_path: "lufi.db"
+lufi_pgdb:
+    database: "lufi"
+    host: "localhost"
+    user: "DBUSER"
+    pwd: "DBPASSWORD"
 lufi_upload_dir: "files"
 lufi_ldap:
     uri: "ldaps://ldap.example.org"
@@ -71,7 +77,9 @@ lufi_ldap:
     bind_user: "uid=ldap_user"
     bind_pwd: "secr3t"
     user_filter: "!(uid=ldap_user)"
+lufi_htpasswd: "lufi.passwd"
 lufi_session_duration: 3600
+lufi_allow_pwd_on_files: no
 lufi_keep_ip_during: 365
 lufi_max_total_size: 10*1024*1024*1024
 lufi_policy_when_full: "warn"

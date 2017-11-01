@@ -10,6 +10,7 @@
     - build-essential
     - git
     - libssl-dev
+    - libpq-dev # required for Mojo::PG (even if PGSQL won't be used)
 
 - name: Lufi | Install cpanm
   get_url:

@@ -173,12 +173,41 @@
     mail_sender => '{{ lufi_mail_sender }}',
 {% endif %}
 
+    # choose what database you want to use
+    # valid choices are sqlite and postgresql (all lowercase)
+    # optional, default is sqlite
+    #dbtype => 'sqlite',
+{% if lufi_db_type is defined %}
+    dbtype => '{{ lufi_db_type }}',
+{% endif %}
+
+    # SQLite ONLY - only used if dbtype is set to sqlite
     # define a path to the SQLite database
     # you can define it relative to lufi directory or set an absolute path
     # remember that it has to be in a directory writable by Lufi user
     # optional, default is lufi.db
     #db_path           => 'lufi.db',
+{% if (lufi_db_type is not defined or lufi_db_type == 'sqlite') and lufi_db_path is defined %}
     db_path => '{{ lufi_db_path }}',
+{% endif %}
+
+    # PostgreSQL ONLY - only used if dbtype is set to postgresql
+    # these are the credentials to access the PostgreSQL database
+    # mandatory if you choosed postgresql as dbtype
+    #pgdb => {
+    #    database => 'lufi',
+    #    host     => 'localhost',
+    #    #user     => 'DBUSER',
+    #    #pwd      => 'DBPASSWORD'
+    #},
+{% if lufi_db_type is defined and lufi_db_type == 'postgresql' and lufi_pgdb is mapping %}
+    pgdb => {
+        {{ "database => '%s'," % lufi_pgdb.database if lufi_pgdb.database }}
+        {{ "host     => '%s'," % lufi_pgdb.host     if lufi_pgdb.host }}
+        {{ "user     => '%s'," % lufi_pgdb.user     if lufi_pgdb.user }}
+        {{ "pwd      => '%s'," % lufi_pgdb.pwd      if lufi_pgdb.pwd }}
+    },
+{% endif %}
 
     # define a path to the upload directory, where the uploaded files will be stored
     # you can define it relative to lufi directory or set an absolute path
@@ -209,7 +238,14 @@
         {{ "bind_user   => '%s'," % lufi_ldap.bind_user   if lufi_ldap.bind_user   }}
         {{ "bind_pwd    => '%s'," % lufi_ldap.bind_pwd    if lufi_ldap.bind_pwd    }}
         {{ "user_filter => '%s'," % lufi_ldap.user_filter if lufi_ldap.user_filter }}
-    }
+    },
+{% endif %}
+
+    # set `htpasswd` if you want to use an htpasswd file instead of ldap
+    # see 'man htpasswd' to know how to create such file
+    #htpasswd => 'lufi.passwd',
+{% if lufi_htpasswd is defined %}
+    htpasswd => '{{ lufi_htpasswd }}',
 {% endif %}
 
     # if you've set ldap above, the session will last `session_duration` seconds before
@@ -218,6 +254,13 @@
     #session_duration => 3600,
 {% if lufi_session_duration is defined %}
     session_duration => {{ lufi_session_duration }},
+{% endif %}
+
+    # allow to add a password on files, asked before allowing to download files
+    # optional, default to 0
+    #allow_pwd_on_files => 0,
+{% if lufi_allow_pwd_on_files is defined %}
+    allow_pwd_on_files => {{ lufi_allow_pwd_on_files | ternary(1,0) }},
 {% endif %}
 
     #########################
