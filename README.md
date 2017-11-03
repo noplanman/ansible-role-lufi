@@ -33,7 +33,7 @@ There are a few mandatory and many optional values. Check all possible variables
 ```
 # Required!
 lufi_working_dir: "/var/www/example.com"
-lufi_listen: "http://127.0.0.1:8080"
+lufi_listen: "http://127.0.0.1:8080"    # Or an array, if multiple addresses.
 lufi_contact: "admin@example.com"
 lufi_secrets: ["array", "of", "random", "secrets"]
 
@@ -51,13 +51,35 @@ lufi_piwik_img: ""
 lufi_broadcast_message: ""
 lufi_default_delay: 0
 lufi_max_delay: 0
+lufi_delay_for_size:
+    10000000: 90   # between 10MB and 50MB => max is 90 days, less than 10MB => max is max_delay (see above)
+    50000000: 60   # between 50MB ans 1GB  => max is 60 days
+    1000000000: 2  # more than 1GB         => max is 2 days
 lufi_prefix: "/"
 lufi_allowed_domains: []
 lufi_fixed_domain: ""
+lufi_mail:
+    how: "smtp"
+    howargs: ["smtp.example.org"]
 lufi_mail_sender: "no-reply@lufi.io"
+lufi_db_type: "sqlite"
 lufi_db_path: "lufi.db"
+lufi_pgdb:
+    database: "lufi"
+    host: "localhost"
+    user: "DBUSER"
+    pwd: "DBPASSWORD"
 lufi_upload_dir: "files"
+lufi_ldap:
+    uri: "ldaps://ldap.example.org"
+    user_tree: "ou=users,dc=example,dc=org"
+    bind_dn: ",ou=users,dc=example,dc=org"
+    bind_user: "uid=ldap_user"
+    bind_pwd: "secr3t"
+    user_filter: "!(uid=ldap_user)"
+lufi_htpasswd: "lufi.passwd"
 lufi_session_duration: 3600
+lufi_allow_pwd_on_files: no
 lufi_keep_ip_during: 365
 lufi_max_total_size: 10*1024*1024*1024
 lufi_policy_when_full: "warn"
@@ -98,6 +120,21 @@ lufi_listen: "http://127.0.0.1:8080"
 lufi_contact: "admin@lufi.example.com"
 lufi_secrets: ["xud7ooJu","aiNg7duG","ih7kom8Z","Ocaish3I","Ooja7chi","Eet4weil","Ethee4Go","xahJ0ohy"]
 lufi_broadcast_message: "Welcome to Lufi. Upload those files!"
+```
+
+## Tests
+
+Docker is used to test the role with different operating systems.
+Unfortunately this doesn't work with boot2docker for MacOS. My current workaround is to have a vagrant machine with docker installed, from which I call the tests. (Yes, a virtual container within a virtual machine...)
+
+*(from `.travis.yml`)*
+```bash
+$ wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/noplanman/40e96f31ee2301469769d4236aff40e2/raw/
+$ chmod +x ${PWD}/tests/test.sh
+$ distro=ubuntu1604 ${PWD}/tests/test.sh
+$ distro=ubuntu1404 ${PWD}/tests/test.sh
+$ distro=debian9 ${PWD}/tests/test.sh
+$ distro=debian8 ${PWD}/tests/test.sh
 ```
 
 ## License
