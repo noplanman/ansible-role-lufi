@@ -122,6 +122,21 @@ lufi_secrets: ["xud7ooJu","aiNg7duG","ih7kom8Z","Ocaish3I","Ooja7chi","Eet4weil"
 lufi_broadcast_message: "Welcome to Lufi. Upload those files!"
 ```
 
+## Tests
+
+Docker is used to test the role with different operating systems.
+Unfortunately this doesn't work with boot2docker for MacOS. My current workaround is to have a vagrant machine with docker installed, from which I call the tests. (Yes, a virtual container within a virtual machine...)
+
+*(from `.travis.yml`)*
+```bash
+$ wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/noplanman/40e96f31ee2301469769d4236aff40e2/raw/
+$ chmod +x ${PWD}/tests/test.sh
+$ distro=ubuntu1604 ${PWD}/tests/test.sh
+$ distro=ubuntu1404 ${PWD}/tests/test.sh
+$ distro=debian9 ${PWD}/tests/test.sh
+$ distro=debian8 ${PWD}/tests/test.sh
+```
+
 ## License
 
 MIT

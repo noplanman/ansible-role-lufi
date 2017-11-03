@@ -13,7 +13,7 @@
 
   pre_tasks:
     # See https://github.com/ansible/ansible/issues/32001
-    - name: Quick fix for incorrect service manager
+    - name: Quick fix for incorrect service manager (Ubuntu 14.04)
       set_fact: ansible_service_mgr="upstart"
       when: ansible_distribution_release == 'trusty'
 
