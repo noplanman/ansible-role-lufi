@@ -12,6 +12,10 @@
     - libssl-dev
     - libpq-dev # required for Mojo::PG (even if PGSQL won't be used)
 
+- name: Lufi | Install essential packages (bionic)
+  apt: name=libdata-entropy-perl state=present
+  when: ansible_distribution_release == 'bionic'
+
 - name: Lufi | Install cpanm
   get_url:
     url: https://cpanmin.us
