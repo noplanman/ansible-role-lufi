@@ -1,124 +1,29 @@
 # {{ ansible_managed }}
 
-# vim:set sw=4 ts=4 sts=4 ft=perl expandtab:
-{
-    ####################
-    # Hypnotoad settings
-    ####################
-    # see http://mojolicio.us/perldoc/Mojo/Server/Hypnotoad for a full list of settings
-    hypnotoad => {
-        # array of IP addresses and ports you want to listen to
-{% if lufi_listen is string %}
-        listen => ['{{ lufi_listen }}'],
-{% else %}
-        listen => {{ lufi_listen | to_json }},
-{% endif %}
-        # if you use Lufi behind a reverse proxy like Nginx, you want ro set proxy to 1
-        # if you use Lufi directly, let it commented
-        #proxy  => 1,
-{% if lufi_proxy is defined %}
-        proxy => {{ lufi_proxy | ternary(1,0) }},
-{% endif %}
+####################
+# Get the in-depth version with detailed explanations here:
+# https://framagit.org/luc/lufi/blob/master/lufi.conf.template
+####################
 
-        # Please read http://mojolicious.org/perldoc/Mojo/Server/Hypnotoad#workers
-        # to adjust this to your server
+{
+    hypnotoad => {
+        listen => {{ [lufi_listen] | flatten | to_json }},
+{{ "        proxy => %s," % lufi_proxy | ternary(1,0) if lufi_proxy is defined else "" }}
         workers => {{ lufi_workers }},
         clients => {{ lufi_clients }},
     },
-
-    # put a way to contact you here and uncomment it
-    # MANDATORY
-    #contact       => 'admin[at]example.com',
     contact => '{{ lufi_contact }}',
-
-    # array of random strings used to encrypt cookies
-    # optional, default is ['fdjsofjoihrei'], PLEASE, CHANGE IT
-    #secrets        => ['fdjsofjoihrei'],
-    secrets => {{ lufi_secrets | to_json }},
-
-    # choose a theme. See the available themes in `themes` directory
-    # optional, default is 'default'
-    #theme         => 'default',
-{% if lufi_theme is defined %}
-    theme => '{{ lufi_theme }}',
-{% endif %}
-
-    # length of the random URL
-    # optional, default is 8
-    #length            => 8,
-{% if lufi_url_length is defined %}
-    length => {{ lufi_url_length }},
-{% endif %}
-
-    # how many URLs will be provisioned in a batch ?
-    # optional, default is 5
-    #provis_step       => 5,
-{% if lufi_provis_step is defined %}
-    provis_step => {{ lufi_provis_step }},
-{% endif %}
-
-    # max number of URLs to be provisioned
-    # optional, default is 100
-    #provisioning      => 100,
-{% if lufi_provisioning is defined %}
-    provisioning => {{ lufi_provisioning }},
-{% endif %}
-
-    # length of the modify/delete token
-    # optional, default is 32
-    #token_length      => 32,
-{% if lufi_token_length is defined %}
-    token_length => {{ lufi_token_length }},
-{% endif %}
-
-    # max file size, in octets
-    # you can write it 100*1024*1024
-    # optional, no default
-    #max_file_size     => 104857600,
-{% if lufi_max_file_size is defined %}
-    max_file_size => {{ lufi_max_file_size }},
-{% endif %}
-
-    # if you want to have piwik statistics, provide a piwik image tracker
-    # only the image tracker is allowed, no javascript
-    # optional, no default
-    #piwik_img         => 'https://piwik.example.org/piwik.php?idsite=1&amp;rec=1',
-{% if lufi_piwik_img is defined %}
-    piwik_img => '{{ lufi_piwik_img }}',
-{% endif %}
-
-    # broadcast_message which will displayed on the index page
-    # optional, no default
-    #broadcast_message => 'Maintenance',
-{% if lufi_broadcast_message is defined %}
-    broadcast_message => '{{ lufi_broadcast_message }}',
-{% endif %}
-
-    # default time limit for files
-    # valid values are 0, 1, 7, 30 and 365
-    # optional, default is 0 (no limit)
-    #default_delay     => 0,
-{% if lufi_default_delay is defined %}
-    default_delay => {{ lufi_default_delay }},
-{% endif %}
-
-    # number of days after which the images will be deleted, even if they were uploaded with "no delay" (or value superior to max_delay)
-    # a warning message will be displayed on homepage
-    # optional, default is 0 (no limit)
-    #max_delay         => 0,
-{% if lufi_max_delay is defined %}
-    max_delay => {{ lufi_max_delay }},
-{% endif %}
-
-    # size thresholds: if you want to define max delays for different sizes of file
-    # the keys are size in Bytes, you can't have 10*1000*10000 as key
-    # if a file is smaller than the smallest configured size, it will have a expiration delay of max_delay (see above)
-    # optional, default is using max_delay (see above) for all sizes
-    #delay_for_size  => {
-    #    10000000   => 90, # between 10MB and 50MB => max is 90 days, less than 10MB => max is max_delay (see above)
-    #    50000000   => 60, # between 50MB ans 1GB  => max is 60 days
-    #    1000000000 => 2,  # more than 1GB         => max is 2 days
-    #},
+    secret => {{ lufi_secrets | to_json }},
+{{ "    theme => '%s',"             % lufi_theme             if lufi_theme is defined             else "" }}
+{{ "    length => %s,"              % lufi_url_length        if lufi_url_length is defined        else "" }}
+{{ "    provis_step => %s,"         % lufi_provis_step       if lufi_provis_step is defined       else "" }}
+{{ "    provisioning => %s,"        % lufi_provisioning      if lufi_provisioning is defined      else "" }}
+{{ "    token_length => %s,"        % lufi_token_length      if lufi_token_length is defined      else "" }}
+{{ "    max_file_size => %s,"       % lufi_max_file_size     if lufi_max_file_size is defined     else "" }}
+{{ "    piwik_img => '%s',"         % lufi_piwik_img         if lufi_piwik_img is defined         else "" }}
+{{ "    broadcast_message => '%s'," % lufi_broadcast_message if lufi_broadcast_message is defined else "" }}
+{{ "    default_delay => %s,"       % lufi_default_delay     if lufi_default_delay is defined     else "" }}
+{{ "    max_delay => %s,"           % lufi_max_delay         if lufi_max_delay is defined         else "" }}
 {% if lufi_delay_for_size is mapping %}
     delay_for_size  => {
 {% for key in lufi_delay_for_size %}
@@ -126,177 +31,42 @@
 {% endfor %}
     },
 {% endif %}
-
-    # URL sub-directory in which you want Lufi to be accessible
-    # example: you want to have Lufi under https://example.org/lufi/
-    # => set prefix to '/lufi' or to '/lufi/', it doesn't matter
-    # optional, default is /
-    #prefix        => '/',
-{% if lufi_prefix is defined %}
-    prefix => '{{ lufi_prefix }}',
-{% endif %}
-
-    # array of authorized domains for API calls.
-    # if you want to authorize everyone to use the API: ['*']
-    # optional, no domains allowed by default
-    #allowed_domains   => ['http://1.example.com', 'http://2.example.com'],
-{% if lufi_allowed_domains is defined %}
-    allowed_domains => {{ lufi_allowed_domains | to_json }},
-{% endif %}
-
-    # if set, the shortened URLs will use this domain
-    # optional
-    #fixed_domain => 'example.org',
-{% if lufi_fixed_domain is defined %}
-    fixed_domain => '{{ lufi_fixed_domain }}',
-{% endif %}
-
-    # Mail configuration
-    # See https://metacpan.org/pod/Mojolicious::Plugin::Mail#EXAMPLES
-    # Optional, default to sendmail method with no arguments
-    #mail => {
-    #    # Valid values are 'sendmail' and 'smtp'
-    #    how => 'smtp',
-    #    howargs => ['smtp.example.org']
-    #},
+{{ "    prefix => '%s',"        % lufi_prefix                    if lufi_prefix is defined          else "" }}
+{{ "    allowed_domains => %s," % lufi_allowed_domains | to_json if lufi_allowed_domains is defined else "" }}
+{{ "    fixed_domain => '%s',"  % lufi_fixed_domain              if lufi_fixed_domain is defined    else "" }}
 {% if lufi_mail is mapping %}
     mail => {
-        {{ "how     => '%s'," % lufi_mail.how               if lufi_mail.how }}
-        {{ "howargs => %s,"   % lufi_mail.howargs | to_json if lufi_mail.howargs }}
+        {{ "how     => '%s'," % lufi_mail.how               if lufi_mail.how     else "" }}
+        {{ "howargs => %s,"   % lufi_mail.howargs | to_json if lufi_mail.howargs else "" }}
     },
 {% endif %}
-
-    # Email sender address
-    # Optional, default to no-reply@lufi.io
-    #mail_sender => 'no-reply@lufi.io',
-{% if lufi_mail_sender is defined %}
-    mail_sender => '{{ lufi_mail_sender }}',
-{% endif %}
-
-    # choose what database you want to use
-    # valid choices are sqlite and postgresql (all lowercase)
-    # optional, default is sqlite
-    #dbtype => 'sqlite',
-{% if lufi_db_type is defined %}
-    dbtype => '{{ lufi_db_type }}',
-{% endif %}
-
-    # SQLite ONLY - only used if dbtype is set to sqlite
-    # define a path to the SQLite database
-    # you can define it relative to lufi directory or set an absolute path
-    # remember that it has to be in a directory writable by Lufi user
-    # optional, default is lufi.db
-    #db_path           => 'lufi.db',
-{% if (lufi_db_type is not defined or lufi_db_type == 'sqlite') and lufi_db_path is defined %}
-    db_path => '{{ lufi_db_path }}',
-{% endif %}
-
-    # PostgreSQL ONLY - only used if dbtype is set to postgresql
-    # these are the credentials to access the PostgreSQL database
-    # mandatory if you choosed postgresql as dbtype
-    #pgdb => {
-    #    database => 'lufi',
-    #    host     => 'localhost',
-    #    #user     => 'DBUSER',
-    #    #pwd      => 'DBPASSWORD'
-    #},
+{{ "    mail_sender => '%s'," % lufi_mail_sender if lufi_mail_sender is defined else "" }}
+{{ "    dbtype => '%s',"      % lufi_db_type     if lufi_db_type is defined     else "" }}
+{{ "    db_path => '%s',"     % lufi_db_path     if (lufi_db_type is not defined or lufi_db_type == 'sqlite') and lufi_db_path is defined else "" }}
 {% if lufi_db_type is defined and lufi_db_type == 'postgresql' and lufi_pgdb is mapping %}
     pgdb => {
-        {{ "database => '%s'," % lufi_pgdb.database if lufi_pgdb.database }}
-        {{ "host     => '%s'," % lufi_pgdb.host     if lufi_pgdb.host }}
-        {{ "user     => '%s'," % lufi_pgdb.user     if lufi_pgdb.user }}
-        {{ "pwd      => '%s'," % lufi_pgdb.pwd      if lufi_pgdb.pwd }}
+        {{ "database => '%s'," % lufi_pgdb.database if lufi_pgdb.database else "" }}
+        {{ "host     => '%s'," % lufi_pgdb.host     if lufi_pgdb.host     else "" }}
+        {{ "user     => '%s'," % lufi_pgdb.user     if lufi_pgdb.user     else "" }}
+        {{ "pwd      => '%s'," % lufi_pgdb.pwd      if lufi_pgdb.pwd      else "" }}
     },
 {% endif %}
-
-    # define a path to the upload directory, where the uploaded files will be stored
-    # you can define it relative to lufi directory or set an absolute path
-    # remember that it has to be in a directory writable by Lufi user
-    # DO NOT CHANGE THIS IF FILES HAVE BEEN ALREADY UPLOADED: THEY WILL NOT BE DOWNLOADABLE ANYMORE
-    # optional, default is 'files'
-    #upload_dir           => 'files',
-{% if lufi_upload_dir is defined %}
-    upload_dir => '{{ lufi_upload_dir }}',
-{% endif %}
-
-    # set `ldap` if you want that only authenticated users can upload files
-    # please note that everybody can still download files
-    # optional, no default
-    #ldap => {
-    #    uri         => 'ldaps://ldap.example.org',
-    #    user_tree   => 'ou=users,dc=example,dc=org',
-    #    bind_dn     => ',ou=users,dc=example,dc=org',
-    #    bind_user   => 'uid=ldap_user',
-    #    bind_pwd    => 'secr3t',
-    #    user_filter => '!(uid=ldap_user)'
-    #},
+{{ "    upload_dir => '%s'," % lufi_upload_dir if lufi_upload_dir is defined else "" }}
 {% if lufi_ldap is mapping %}
     ldap => {
-        {{ "uri         => '%s'," % lufi_ldap.uri         if lufi_ldap.uri         }}
-        {{ "user_tree   => '%s'," % lufi_ldap.user_tree   if lufi_ldap.user_tree   }}
-        {{ "bind_dn     => '%s'," % lufi_ldap.bind_dn     if lufi_ldap.bind_dn     }}
-        {{ "bind_user   => '%s'," % lufi_ldap.bind_user   if lufi_ldap.bind_user   }}
-        {{ "bind_pwd    => '%s'," % lufi_ldap.bind_pwd    if lufi_ldap.bind_pwd    }}
-        {{ "user_filter => '%s'," % lufi_ldap.user_filter if lufi_ldap.user_filter }}
+        {{ "uri         => '%s'," % lufi_ldap.uri         if lufi_ldap.uri         else "" }}
+        {{ "user_tree   => '%s'," % lufi_ldap.user_tree   if lufi_ldap.user_tree   else "" }}
+        {{ "bind_dn     => '%s'," % lufi_ldap.bind_dn     if lufi_ldap.bind_dn     else "" }}
+        {{ "bind_user   => '%s'," % lufi_ldap.bind_user   if lufi_ldap.bind_user   else "" }}
+        {{ "bind_pwd    => '%s'," % lufi_ldap.bind_pwd    if lufi_ldap.bind_pwd    else "" }}
+        {{ "user_filter => '%s'," % lufi_ldap.user_filter if lufi_ldap.user_filter else "" }}
     },
 {% endif %}
-
-    # set `htpasswd` if you want to use an htpasswd file instead of ldap
-    # see 'man htpasswd' to know how to create such file
-    #htpasswd => 'lufi.passwd',
-{% if lufi_htpasswd is defined %}
-    htpasswd => '{{ lufi_htpasswd }}',
-{% endif %}
-
-    # if you've set ldap above, the session will last `session_duration` seconds before
-    # the user needs to reauthenticate
-    # optional, default is 3600
-    #session_duration => 3600,
-{% if lufi_session_duration is defined %}
-    session_duration => {{ lufi_session_duration }},
-{% endif %}
-
-    # allow to add a password on files, asked before allowing to download files
-    # optional, default to 0
-    #allow_pwd_on_files => 0,
-{% if lufi_allow_pwd_on_files is defined %}
-    allow_pwd_on_files => {{ lufi_allow_pwd_on_files | ternary(1,0) }},
-{% endif %}
-
-    #########################
-    # Lufi cron jobs settings
-    #########################
-
-    # number of days senders' IP addresses are kept in database
-    # after that delay, they will be deleted from database (used with script/lufi cron cleanbdd)
-    # optional, default is 365
-    #keep_ip_during    => 365,
-{% if lufi_keep_ip_during is defined %}
-    keep_ip_during => {{ lufi_keep_ip_during }},
-{% endif %}
-
-    # max size of the files directory, in octets
-    # used by script/lufi cron watch to trigger an action
-    # optional, no default
-    #max_total_size    => 10*1024*1024*1024,
-{% if lufi_max_total_size is defined %}
-    max_total_size => {{ lufi_max_total_size }},
-{% endif %}
-
-    # default action when files directory is over max_total_size (used with script/lufi cron watch)
-    # valid values are 'warn', 'stop-upload' and 'delete'
-    # please, see readme
-    # optional, default is 'warn'
-    #policy_when_full  => 'warn',
-{% if lufi_policy_when_full is defined %}
-    policy_when_full => '{{ lufi_policy_when_full }}',
-{% endif %}
-
-    # images which are not viewed since delete_no_longer_viewed_files days will be deleted by the cron cleanfiles task
-    # if delete_no_longer_viewed_files is not set, the no longer viewed files will NOT be deleted
-    # optional, no default
-    #delete_no_longer_viewed_files => 90,
-{% if lufi_delete_no_longer_viewed_files is defined %}
-    delete_no_longer_viewed_files => {{ lufi_delete_no_longer_viewed_files }},
-{% endif %}
+{{ "    htpasswd => '%s',"                    % lufi_htpasswd                          if lufi_htpasswd is defined                      else "" }}
+{{ "    session_duration => %s,"              % lufi_session_duration                  if lufi_session_duration is defined              else "" }}
+{{ "    allow_pwd_on_files => %s,"            % lufi_allow_pwd_on_files | ternary(1,0) if lufi_allow_pwd_on_files is defined            else "" }}
+{{ "    keep_ip_during => %s,"                % lufi_keep_ip_during                    if lufi_keep_ip_during is defined                else "" }}
+{{ "    max_total_size => %s,"                % lufi_max_total_size                    if lufi_max_total_size is defined                else "" }}
+{{ "    policy_when_full => '%s',"            % lufi_policy_when_full                  if lufi_policy_when_full is defined              else "" }}
+{{ "    delete_no_longer_viewed_files => %s," % lufi_delete_no_longer_viewed_files     if lufi_delete_no_longer_viewed_files is defined else "" }}
 };
